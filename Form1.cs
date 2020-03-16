@@ -118,6 +118,7 @@ namespace RPGSchoolV1
                 cbWeapon.Enabled = true;
                 btnAttack.Visible = true;
                 rtbFeed.AppendText("What will you do this turn?\n");
+                ClearComboBoxes();
                 UpdateComboBoxes();
             }
         }
@@ -198,6 +199,51 @@ namespace RPGSchoolV1
             buttonsNeeded = me.MoveWest(mainWorld);
             UpdateAll();
         }
+
+        private void btnAttack_Click(object sender, EventArgs e) //Attack order: player, monster
+        {
+            int monsterID = 0;
+            int preAttackMHP = 0;
+            int preAttackPHP = mainWorld.player.healthPoints;
+            int monsterIndexNum = 0;
+            string monsterName = "";
+            for (int i = 0; i < mainWorld.player.currentLocation.monsters.Count; i++)
+            {
+                if (mainWorld.player.currentLocation.monsters[i].name == cbEnemy.Text)
+                {
+                    monsterID = mainWorld.player.currentLocation.monsters[i].id;
+                    preAttackMHP = mainWorld.player.currentLocation.monsters[i].healthPoints;
+                    monsterIndexNum = i;
+                    monsterName = mainWorld.player.currentLocation.monsters[i].name;
+                }
+            }
+            string weaponName = cbWeapon.Text;
+            mainWorld = ce.AttackEnemy(mainWorld, monsterID, weaponName);
+            int monsterLostHealth = preAttackMHP - mainWorld.player.currentLocation.monsters[monsterIndexNum].healthPoints;
+            int playerLostHealth = preAttackPHP - mainWorld.player.healthPoints;
+            rtbFeed.AppendText($"Player attacked {monsterName} for {Convert.ToString(monsterLostHealth)} damage.\n");
+            if (mainWorld.player.currentLocation.monsters[monsterIndexNum].healthPoints <= 0)
+            {
+                rtbFeed.AppendText($"{monsterName} is dead.\n");
+                mainWorld.player.currentLocation.monsters.RemoveAt(monsterIndexNum);
+            }
+            else
+            {
+                rtbFeed.AppendText($"{monsterName} is now on {Convert.ToString(mainWorld.player.currentLocation.monsters[monsterIndexNum].healthPoints)} HP.\n");
+                rtbFeed.AppendText($"{monsterName} attacked Player for {playerLostHealth} damage.\n");
+                if (mainWorld.player.healthPoints <= 0)
+                {
+                    rtbFeed.AppendText("You have died. Exiting.\n");
+                    System.Threading.Thread.Sleep(5000);
+                }
+                else
+                {
+                    rtbFeed.AppendText($"You now have {mainWorld.player.healthPoints} HP.\n");
+                }
+            }
+            CheckEnemiesUpdateButtons();
+            UpdateTextAndInfo();
+        }//TODO - check combobox choice for both, allow attack button
     }
 }
 //TODO ADD ATTACKING MECHANIC - baseDam * random mult 0.75-1.25?

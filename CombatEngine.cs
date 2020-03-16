@@ -20,6 +20,7 @@ namespace RPGSchoolV1
         {
             int weaponIndex = -1;
             int monsterIndex = -1;
+
             for (int i = 0; i < mainWorld.player.inventory.Count; i++)
             {
                 if (mainWorld.player.inventory[i].details.name == weaponName)
@@ -34,11 +35,21 @@ namespace RPGSchoolV1
                     monsterIndex = i;
                 }
             }
+
             double monsterMultiplier = GetDamageMultiplier();
             double damageToPlayer = mainWorld.player.currentLocation.monsters[monsterIndex].baseDamage * monsterMultiplier;
+            damageToPlayer = Math.Round(damageToPlayer);
 
             double playerMultiplier = GetDamageMultiplier();
             double damageToMonster = mainWorld.player.inventory[weaponIndex].details.baseDamage * playerMultiplier;
+            damageToMonster = Math.Round(damageToMonster);
+
+            mainWorld.player.currentLocation.monsters[monsterIndex].healthPoints -= Convert.ToInt32(damageToMonster);
+
+            if (mainWorld.player.currentLocation.monsters[monsterIndex].healthPoints > 0)
+            {
+                mainWorld.player.healthPoints -= Convert.ToInt32(damageToPlayer);
+            }
 
             //TODO - Damages player/monster, update score, keep pre-damage total hp to subtract, display damage done && round damage delt to nearest int (up? down?)
 

@@ -241,6 +241,7 @@
             this.btnAttack.Text = "Attack!";
             this.btnAttack.UseVisualStyleBackColor = true;
             this.btnAttack.Visible = false;
+            this.btnAttack.Click += new System.EventHandler(this.btnAttack_Click);
             // 
             // Form1
             // 
