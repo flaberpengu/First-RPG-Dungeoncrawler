@@ -77,6 +77,12 @@ namespace RPGSchoolV1
             tbLocation.Text = mainWorld.player.currentLocation.name.ToString();
         }
 
+        //Private method to update player health displayed
+        private void UpdatePlayerHealth()
+        {
+            tbHealth.Text = Convert.ToString(mainWorld.player.healthPoints);
+        }
+
         //Private method to update all info when new room is entered
         private void UpdateTextAndInfo()
         {
@@ -200,7 +206,15 @@ namespace RPGSchoolV1
             UpdateAll();
         }
 
-        private void btnAttack_Click(object sender, EventArgs e) //Attack order: player, monster
+        //Private method to clear monsters from the relevant textbox and then rewrite them (ie update monsters' health)
+        private void ClearAndUpdateMonsters()
+        {
+            rtbMonsters.Clear();
+            WriteMonsters();
+        }
+
+        //Private method to be run when an attack is made
+        private void AttackEnemy() //Attack order: player, monster
         {
             int monsterID = 0;
             int preAttackMHP = 0;
@@ -242,8 +256,22 @@ namespace RPGSchoolV1
                 }
             }
             CheckEnemiesUpdateButtons();
-            UpdateTextAndInfo();
-        }//TODO - check combobox choice for both, allow attack button
+            ClearAndUpdateMonsters();
+            UpdatePlayerHealth();
+        }
+
+        private void btnAttack_Click(object sender, EventArgs e)
+        {
+            AttackEnemy();
+        }
+
+        private void cbEnemy_TextUpdate(object sender, EventArgs e)
+        {
+            if (cbEnemy.Text != "" && cbWeapon.Text != "")
+            {
+                btnAttack.Enabled = true;
+            }
+        }
     }
 }
 //TODO ADD ATTACKING MECHANIC - baseDam * random mult 0.75-1.25?

@@ -199,11 +199,14 @@
             // 
             // cbEnemy
             // 
+            this.cbEnemy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbEnemy.FormattingEnabled = true;
             this.cbEnemy.Location = new System.Drawing.Point(108, 381);
             this.cbEnemy.Name = "cbEnemy";
             this.cbEnemy.Size = new System.Drawing.Size(121, 21);
             this.cbEnemy.TabIndex = 16;
+            this.cbEnemy.TextUpdate += new System.EventHandler(this.cbEnemy_TextUpdate);
+            this.cbEnemy.TextChanged += new System.EventHandler(this.cbEnemy_TextUpdate);
             // 
             // label6
             // 
@@ -225,11 +228,14 @@
             // 
             // cbWeapon
             // 
+            this.cbWeapon.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbWeapon.FormattingEnabled = true;
             this.cbWeapon.Location = new System.Drawing.Point(108, 408);
             this.cbWeapon.Name = "cbWeapon";
             this.cbWeapon.Size = new System.Drawing.Size(121, 21);
             this.cbWeapon.TabIndex = 18;
+            this.cbWeapon.TextUpdate += new System.EventHandler(this.cbEnemy_TextUpdate);
+            this.cbWeapon.TextChanged += new System.EventHandler(this.cbEnemy_TextUpdate);
             // 
             // btnAttack
             // 
