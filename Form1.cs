@@ -258,6 +258,7 @@ namespace RPGSchoolV1
             CheckEnemiesUpdateButtons();
             ClearAndUpdateMonsters();
             UpdatePlayerHealth();
+            btnAttack.Enabled = false;
         }
 
         private void btnAttack_Click(object sender, EventArgs e)
