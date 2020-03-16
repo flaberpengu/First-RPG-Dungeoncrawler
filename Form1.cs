@@ -275,7 +275,6 @@ namespace RPGSchoolV1
         }
     }
 }
-//TODO ADD ATTACKING MECHANIC - baseDam * random mult 0.75-1.25?
 //TODO ADD MORE MONSTERS - GIVE EACH A TYPE
 //TODO ROOMS CAN HAVE MULTIPLE - DIFF CHANCE EACH -----> CLASS FOR MONSTER CHANCE W TYPE AND %?
 //TODO Weapons can vary mutiplier (stronger = higher)

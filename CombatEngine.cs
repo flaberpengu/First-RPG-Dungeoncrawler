@@ -51,8 +51,6 @@ namespace RPGSchoolV1
                 mainWorld.player.healthPoints -= Convert.ToInt32(damageToPlayer);
             }
 
-            //TODO - Damages player/monster, update score, keep pre-damage total hp to subtract, display damage done && round damage delt to nearest int (up? down?)
-
             return mainWorld;
         }
     }
