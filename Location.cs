@@ -16,13 +16,15 @@ namespace RPGSchoolV1
         public string name;
         public List<Monster> monsters;
         public int chanceForEnemies;
+        public int maxEnemies;
 
         //Constructor
-        public Location(string gName, int gChance)
+        public Location(string gName, int gChance, int gMaxEnemies)
         {
             name = gName;
             chanceForEnemies = gChance;
             monsters = new List<Monster>();
+            maxEnemies = gMaxEnemies;
         }
     }
 }

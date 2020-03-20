@@ -18,10 +18,18 @@ namespace RPGSchoolV1
         public void PutEnemiesInRoom(World world)
         {
             int chance = world.player.currentLocation.chanceForEnemies;
-            int randomNumber = rnd.Next(0, 100);
-            if (randomNumber < chance)
+            int maxEnemies = world.player.currentLocation.maxEnemies;
+            for (int i = 0; i < maxEnemies; i++)
             {
-                world.AddMonster();
+                int randomNumber = rnd.Next(0, 100);
+                if (randomNumber < chance)
+                {
+                    world.AddMonster(i);
+                }
+                else
+                {
+                    i = maxEnemies;
+                }
             }
         }
         //Public method to get a bool array (NESW) of which buttons should be activated

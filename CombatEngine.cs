@@ -30,7 +30,7 @@ namespace RPGSchoolV1
             }
             for (int i = 0; i < mainWorld.player.currentLocation.monsters.Count; i++)
             {
-                if (mainWorld.player.currentLocation.monsters[i].id == monsterID)
+                if (mainWorld.player.currentLocation.monsters[i].localID == monsterID)
                 {
                     monsterIndex = i;
                 }

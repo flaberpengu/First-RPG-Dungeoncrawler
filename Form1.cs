@@ -16,6 +16,7 @@ namespace RPGSchoolV1
         public MovementEngine me;
         public bool[] buttonsNeeded;
         public CombatEngine ce;
+        public bool isFirstTime;
         //Constructor
         public Form1()
         {
@@ -33,6 +34,7 @@ namespace RPGSchoolV1
             WriteInventoryItems();
             cbEnemy.Enabled = false;
             cbWeapon.Enabled = false;
+            isFirstTime = false;
         }
         
 
@@ -55,9 +57,38 @@ namespace RPGSchoolV1
         //Private method to list all monsters in room when entered
         private void WriteMonsters()
         {
+            var monsters = new List<MonsterArrayCounterItem>();
+            int index;
             foreach (Monster m in mainWorld.player.currentLocation.monsters)
             {
-                rtbMonsters.AppendText($"{m.name}, {m.healthPoints}\n");
+                index = -1;
+                bool inArray = false;
+                if (monsters.Count != 0)
+                {
+                    for (int i = 0; i < monsters.Count; i++)
+                    {
+                        if (monsters[i].monsterName == m.name)
+                        {
+                            index = i;
+                            monsters[i].count++;
+                            inArray = true;
+                        }
+                    }
+                }
+                if (!inArray)
+                {
+                    monsters.Add(new MonsterArrayCounterItem(m.name, 1));
+                    index = (monsters.Count - 1);
+                }
+                if (isFirstTime)
+                {
+                    rtbMonsters.AppendText($"{m.name + " " + monsters[index].count.ToString()}, {m.healthPoints}\n");
+                    m.cbMonsterName = ($"{m.name + " " + monsters[index].count.ToString()}");
+                }
+                else
+                {
+                    rtbMonsters.AppendText($"{m.cbMonsterName}, {m.healthPoints}\n");
+                }
             }
         }
 
@@ -68,6 +99,7 @@ namespace RPGSchoolV1
             foreach (Monster m in mainWorld.player.currentLocation.monsters)
             {
                 rtbFeed.AppendText($"There is a {m.name} here.\n");
+                isFirstTime = true;
             }
         }
 
@@ -88,15 +120,44 @@ namespace RPGSchoolV1
         {
             SetLocationText();
             SetMonsterAndLocationText();
-            WriteMonsters();
+            WriteMonsters(); //FIX
         }
 
         //Private method to update choices where appropriate
         private void UpdateComboBoxes()
         {
+            var monsters = new List<MonsterArrayCounterItem>();
+            int index;
             foreach (Monster m in mainWorld.player.currentLocation.monsters)
             {
-                cbEnemy.Items.Add(m.name);
+                index = -1;
+                bool inArray = false;
+                if (monsters.Count != 0)
+                {
+                    for (int i = 0; i < monsters.Count; i++)
+                    {
+                        if (monsters[i].monsterName == m.name)
+                        {
+                            index = i;
+                            monsters[i].count++;
+                            inArray = true;
+                        }
+                    }
+                }
+                if (!inArray)
+                {
+                    monsters.Add(new MonsterArrayCounterItem(m.name, 1));
+                    index = (monsters.Count - 1);
+                }
+                if (isFirstTime)
+                {
+                    cbEnemy.Items.Add((m.name + " " + monsters[index].count.ToString()));
+                }
+                else
+                {
+                    cbEnemy.Items.Add(m.cbMonsterName);
+                }
+                
             }
             foreach (InventoryItem i in mainWorld.player.inventory)
             {
@@ -114,7 +175,7 @@ namespace RPGSchoolV1
         //Private method to begin combat mechanics if enemies are in a room
         private void CheckEnemiesUpdateButtons()
         {
-            if (mainWorld.player.currentLocation.monsters.Count() != 0)
+            if (mainWorld.player.currentLocation.monsters.Count != 0)
             {
                 btnNorth.Enabled = false;
                 btnEast.Enabled = false;
@@ -126,6 +187,11 @@ namespace RPGSchoolV1
                 rtbFeed.AppendText("What will you do this turn?\n");
                 ClearComboBoxes();
                 UpdateComboBoxes();
+            }
+            else
+            {
+                buttonsNeeded = me.GetButtonStates(mainWorld);
+                SetButtons(buttonsNeeded);
             }
         }
 
@@ -210,7 +276,7 @@ namespace RPGSchoolV1
         private void ClearAndUpdateMonsters()
         {
             rtbMonsters.Clear();
-            WriteMonsters();
+            WriteMonsters(); //FIX
         }
 
         //Private method to be run when an attack is made
@@ -223,12 +289,12 @@ namespace RPGSchoolV1
             string monsterName = "";
             for (int i = 0; i < mainWorld.player.currentLocation.monsters.Count; i++)
             {
-                if (mainWorld.player.currentLocation.monsters[i].name == cbEnemy.Text)
+                if (mainWorld.player.currentLocation.monsters[i].cbMonsterName == cbEnemy.Text)
                 {
-                    monsterID = mainWorld.player.currentLocation.monsters[i].id;
+                    monsterID = mainWorld.player.currentLocation.monsters[i].localID;
                     preAttackMHP = mainWorld.player.currentLocation.monsters[i].healthPoints;
                     monsterIndexNum = i;
-                    monsterName = mainWorld.player.currentLocation.monsters[i].name;
+                    monsterName = mainWorld.player.currentLocation.monsters[i].cbMonsterName;
                 }
             }
             string weaponName = cbWeapon.Text;
@@ -259,6 +325,13 @@ namespace RPGSchoolV1
             ClearAndUpdateMonsters();
             UpdatePlayerHealth();
             btnAttack.Enabled = false;
+            if (mainWorld.player.currentLocation.monsters.Count == 0)
+            {
+                cbEnemy.Enabled = false;
+                cbWeapon.Enabled = false;
+                ClearComboBoxes();
+            }
+            isFirstTime = false;
         }
 
         private void btnAttack_Click(object sender, EventArgs e)
@@ -278,3 +351,8 @@ namespace RPGSchoolV1
 //TODO ADD MORE MONSTERS - GIVE EACH A TYPE
 //TODO ROOMS CAN HAVE MULTIPLE - DIFF CHANCE EACH -----> CLASS FOR MONSTER CHANCE W TYPE AND %?
 //TODO Weapons can vary mutiplier (stronger = higher)
+//TODO Add crit hits
+//TODO Add graphics - unity? 
+
+    //Current: add more monster types, random each per room, do max per room, id each per room, increase multiplier? (lack of variation)
+    //ADDED: MORE MONST TYPES, rng for which, added caps for monsters per room, added iterating to gen multiple enemies per room, cb and rtb show diff num enemies - IS DEAD DOES NOT WORK!!, fixed -ve damage

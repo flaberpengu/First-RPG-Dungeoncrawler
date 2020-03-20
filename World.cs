@@ -22,19 +22,53 @@ namespace RPGSchoolV1
         const int MONST_SPIDER_BASEDAMAGE = 3;
         const int MONST_SPIDER_HP = 20;
 
-        public void AddMonster()
+        const int MONST_ZOMBIE_ID = 2;
+        const string MONST_ZOMBIE_NAME = "Zombie";
+        const int MONST_ZOMBIE_BASEDAMAGE = 5;
+        const int MONST_ZOMBIE_HP = 15;
+
+        const int MONST_CRAWLER_ID = 3;
+        const string MONST_CRAWLER_NAME = "Crawler";
+        const int MONST_CRAWLER_BASEDAMAGE = 2;
+        const int MONST_CRAWLER_HP = 25;
+
+        //Random number generator instance
+        Random rnd = new Random();
+
+        //Method to get a random integer
+        public int GetRandomNumber(int minValue, int maxValue)
         {
-            player.currentLocation.monsters.Add(new Monster(MONST_SPIDER_ID, MONST_SPIDER_NAME, MONST_SPIDER_BASEDAMAGE, MONST_SPIDER_HP));
+            int number = rnd.Next(minValue, maxValue);
+            return number;
         }
+
+        //Method to choose a random monster to add
+        public void AddMonster(int localID)
+        {
+            int monster = GetRandomNumber(1, 3);
+            switch (monster)
+            {
+                case 1:
+                    player.currentLocation.monsters.Add(new Monster(localID, MONST_SPIDER_ID, MONST_SPIDER_NAME, MONST_SPIDER_BASEDAMAGE, MONST_SPIDER_HP));
+                    break;
+                case 2:
+                    player.currentLocation.monsters.Add(new Monster(localID, MONST_ZOMBIE_ID, MONST_ZOMBIE_NAME, MONST_ZOMBIE_BASEDAMAGE, MONST_ZOMBIE_HP));
+                    break;
+                case 3:
+                    player.currentLocation.monsters.Add(new Monster(localID, MONST_CRAWLER_ID, MONST_CRAWLER_NAME, MONST_CRAWLER_BASEDAMAGE, MONST_CRAWLER_HP));
+                    break;
+            }
+        }
+            
         public void InitialiseWorld()
         {
             //Initialise locations
-            location0 = new Location("NONE",0);
-            location1 = new Location("loc1",0);
-            location2 = new Location("loc2",40);
-            location3 = new Location("loc3",10);
-            location4 = new Location("loc4",35);
-            location5 = new Location("loc5",95);
+            location0 = new Location("NONE",0,0);
+            location1 = new Location("loc1",0,0);
+            location2 = new Location("loc2",40,2);
+            location3 = new Location("loc3",10,1);
+            location4 = new Location("loc4",35,1);
+            location5 = new Location("loc5",95,2);
             //Initialise player;
             player = new Player("Tester", 50, 0, location1);
             //Create basic weapon for player
